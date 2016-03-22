@@ -165,6 +165,45 @@ $(function(){
 	// $('.main-content').hide();
 	// compileLocations();
 	$('.location').on('click', '.submit', function(e){
+		var posts = $.ajax('http://jsonplaceholder.typicode.com/posts', {
+			method: 'GET'
+		});
+		var users = $.ajax({
+			url: 'http://jsonplaceholder.typicode.com/users',
+			method: 'GET'
+		});
+		
+		var data = {};
+		
+		$.when(posts, users).done(function(postsData, usersData) {
+			
+			data.posts = postsData[0];
+			data.users = usersData[0];
+			
+			data.getUserForPost = function(post) {
+				for (var i = 0; i < data.users.length; i++) {
+					if (data.users[i].id === post.userId) {
+						return data.users[i];
+					}
+				}
+				
+				return false;
+			};
+			
+			data.getPostsWithUser = function () {
+				return data.posts.map(function(post) {
+					post.user = data.getUserForPost(post);
+					return post;
+				});
+			};
+
+
+			var finalData = data.getPostsWithUser();
+			debugger;
+			
+			compileListings(finalData);
+		});
+		
 		e.preventDefault();
 		$('.landing').hide('fast');
 		$('.main-content').show('fast');
