@@ -1,0 +1,96 @@
+* {
+	box-sizing: border-box;
+}
+
+html {
+	height: 100%;
+}
+
+ul {
+	margin-left: 0;
+}
+
+.content {
+	height: 100%;
+	width: 95%;
+	margin: 1em auto 0;
+	font-family: 'Roboto', sans-serif;
+	color: #333;
+}
+
+/***** LANDING STYLES *****/
+
+.landing {
+
+}
+
+.header {
+	margin-top: 50%;
+}
+
+.center-text {
+	text-align: center;
+}
+
+.headline {
+	width: 33%;
+	margin: 0 auto;
+	padding-bottom: .5em;
+	border-bottom: solid 1px #444;
+	font-weight: 900;
+	font-size: 5em;
+	text-shadow: 1px 1px white,
+				  3px 3px 5px #555;
+}
+
+.tagline {
+	font-weight: 500;
+	font-size: 3em;
+}
+
+.location {
+	font-size: 1.5em;
+	margin: .75em auto;
+	display: block;
+}
+
+.submit {
+	margin-top: 1.5em;
+}
+
+/***** MAIN CONTENT STYLES *****/
+
+.map, 
+.show-listings {
+	border: solid 1px #444;
+}
+
+.main-content {
+	height: 100%;
+	display: none;
+}
+
+.show-listings {
+	height: 41em;
+	padding: 1em;
+	overflow: auto;
+}
+
+.map {
+	height: 55em;
+	position: fixed;
+}
+
+.listing {
+	border-bottom: solid 1px #444;
+}
+
+
+
+
+
+
+
+
+
+
