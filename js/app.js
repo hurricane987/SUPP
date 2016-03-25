@@ -1,10 +1,3 @@
-
-// function showEvent(location){
-// 	for (var i = 0; i < events.length; i++){
-// 		locations.append
-// 	}
-// }
-
 var shows = [
 {
 	id: 11623858,
@@ -112,7 +105,7 @@ var listingHTML = '';
 
 function compileListings() {
 	for (var i = 0; i < shows.length; i ++){
-		listingHTML += "<div class='listing'><h2>" + shows[i].artists[0].name + "</h2><h3>" + shows[i].venue.name + "</h3></div>";
+		listingHTML += "<li><div class='listing' data-id='" + shows[i].id + "'><h3 class='listing-title'>" + shows[i].artists[0].name + " @ " + shows[i].venue.name + "</h3><h4 class='listing-subheading'>" + moment(shows[i].datetime).format( 'MMM DD, YYYY h:mm a' ) + "</h4><div class='otherInfo' id='other" + shows[i].id + "'><h4 class='listing-subheading'><a href='" + shows[i].url + "'>Event Page</a></h4><h4 class='listing-subheading'><a href='" + shows[i].ticket_url + "'>Get Tickets</a></h4></div></div></li>";
 	}
 }
 
@@ -120,26 +113,17 @@ function showListings() {
 	document.getElementById('listings').innerHTML += listingHTML;
 }
 
-// function compileLocations(){
-// 	for (var i = 0; i<shows.length; i++) {
-// 		locations += "['" + shows[i].venue.name + "', " + shows[i].venue.latitude + ", " + shows[i].venue.longitude + ", " + (i + 1) + "],";
-// 	}
-// }
-
-var locations = [
-    		// ['Bondi Beach', -33.890542, 151.274856, 4],
-   		 // 	['Coogee Beach', -33.923036, 151.259052, 5],
-   			// ['Cronulla Beach', -34.028249, 151.157507, 3],
-    		// ['Manly Beach', -33.80010128657071, 151.28747820854187, 2],
-    		// ['Maroubra Beach', -33.950198, 151.259302, 1]
-		];
 var map;
 
   	function initMap() {
 
         map = new google.maps.Map(document.getElementById('map'), {
-          center: {lat: shows[0].venue.latitude, lng: shows[0].venue.longitude},
-          zoom: 12
+          	center: {lat: -122.681944, lng: 45.52},
+         	zoom: 15,
+         	zoomControl: true,
+    		zoomControlOptions: {
+        		position: google.maps.ControlPosition.RIGHT_TOP
+    		},
         });
 
 	    for (i = 0; i < shows.length; i++) {  
@@ -150,7 +134,7 @@ var map;
 
 	    	google.maps.event.addListener(marker, 'click', (function(marker, i) {
 	        	return function() {
-	          		infowindow.setContent(locations[i][0]);
+	          		infowindow.setContent(shows[i].artists[0].name);
 	          		infowindow.open(map, marker);
 	        	}
 	    	})(marker, i));
@@ -161,17 +145,18 @@ var map;
 		var marker, i;
 	}
 
-$(function(){
-	// $('.main-content').hide();
-	// compileLocations();
+$(document).ready(function(){
 	$('.location').on('click', '.submit', function(e){
 		e.preventDefault();
+		$('.map').css('height', '65%');
 		$('.landing').hide('fast');
-		$('.main-content').show('fast');
-		console.log(locations);
-		initMap();
+		$('.show-listings').show('fast');
 		compileListings();
 		showListings();
+	});
+
+	$('.show-listings').on('click', '.listing', function(){
+		$(this).find('.otherInfo').toggle('fast');
 	});
 });
 
