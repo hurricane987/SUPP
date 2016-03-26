@@ -3,7 +3,7 @@
 <head>
 	<meta charset="UTF-8">
 	<title>SUPP? | Live Music. Tonight.</title>
-	<link href='https://fonts.googleapis.com/css?family=Roboto:400,900,500' rel='stylesheet' type='text/css'>
+	<link href="https://fonts.googleapis.com/css?family=Roboto:400,900,500" rel="stylesheet" type="text/css">
 	<link rel="stylesheet" href="css/normalize.css">
 	<link rel="stylesheet" href="css/main.css">
 </head>
@@ -22,9 +22,30 @@
 				<input type="submit" class="submit location box-shadow">
 			</form>
 		</div>
+		<div class="loading-screen">
+			<header class="header">
+				<div class="spinner">
+  					<div class="bounce1"></div>
+ 					<div class="bounce2"></div>
+					<div class="bounce3"></div>
+				</div>
+			</header>
+		</div>
+		<div class="fail-screen">
+			<header class="header">
+				<h1 class = "tagline center-text loading">
+					Nothing to show...
+				</h1>
+				<div class="reload">
+					<h2 class = "tagline center-text try-again">Try again</h2>
+				</div>
+			</header>
+		</div>
 		<div class="main-content">
 			<div class="map" id="map"></div>
-			<div class="show-listings"><ul class="listings" id="listings"></ul></div>
+			<div class="show-listings">
+				<ul class="listings" id="listings"></ul>
+			</div>
 		</div>
 	</div>
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.12.0/moment.min.js"></script>
