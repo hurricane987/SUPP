@@ -7,6 +7,7 @@ var map;
          	zoom: 15,
          	zoomControl: true,
     		zoomControlOptions: {
+    			style: google.maps.ZoomControlStyle.LARGE,
         		position: google.maps.ControlPosition.RIGHT_TOP
     		},
         });
@@ -14,142 +15,52 @@ var map;
 
 $(document).ready(function(){
 
-	var shows = [
-	{
-		id: 11623858,
-		url: "http://www.bandsintown.com/event/11623858?app_id=SUPP",
-		datetime: "2016-03-21T08:00:18",
-		ticket_url: "http://www.bandsintown.com/event/11623858/buy_tickets?app_id=SUPP&came_from=233",
-		artists: [
-			{
-			name: "Louie laveine",
-			url: "http://www.bandsintown.com/LouieLaveine",
-			mbid: null
-			}
-		],
-		venue: {
-		id: 2549874,
-		url: "http://www.bandsintown.com/venue/2549874",
-		name: "Dantes ",
-		city: "Portland",
-		region: "OR",
-		country: "United States",
-		latitude: 45.5221242,
-		longitude: -122.6727062
-		},
-		ticket_status: "available",
-		on_sale_datetime: null
-	},
-	{
-		id: 10416072,
-		url: "http://www.bandsintown.com/event/10416072?app_id=SUPP",
-		datetime: "2016-03-21T18:30:00",
-		ticket_url: "http://www.bandsintown.com/event/10416072/buy_tickets?app_id=SUPP&came_from=233",
-		artists: [
-			{
-				name: "TAPPY HOUR",
-				url: "http://www.bandsintown.com/TappyHour",
-				mbid: null
-			},
-			{
-				name: "TAP DANCE CLASS W. SUE CESWICK",
-				url: "http://www.bandsintown.com/TapDanceClassW.SueCeswick",
-				mbid: null
-			},
-			{
-				name: "Gothique 11 pm",
-				url: "http://www.bandsintown.com/Gothique11Pm",
-				mbid: null
-			},
-			{
-				name: "FCTV 9 pm",
-				url: "http://www.bandsintown.com/Fctv9Pm",
-				mbid: null
-			},
-			{
-				name: "FREE MARIJUANA MONDAYS",
-				url: "http://www.bandsintown.com/%22freeMarijuanaMondays%22",
-				mbid: null
-			},
-			{
-				name: "Gothique Blend @ 10 pm",
-				url: "http://www.bandsintown.com/GothiqueBlend%4010Pm",
-				mbid: null
-			}
-		],
-		venue: {
-		id: 2026314,
-		url: "http://www.bandsintown.com/venue/2026314",
-		name: "Analog Cafe & Theater",
-		city: "Portland",
-		region: "OR",
-		country: "United States",
-		latitude: 45.512006,
-		longitude: -122.658176
-		},
-		ticket_status: "available",
-		on_sale_datetime: null
-	},
-	{
-		id: 11611843,
-		url: "http://www.bandsintown.com/event/11611843?app_id=SUPP",
-		datetime: "2016-03-21T19:00:00",
-		ticket_url: "http://www.bandsintown.com/event/11611843/buy_tickets?app_id=SUPP&came_from=233",
-		artists: [
-		{
-			name: "Matt Alber",
-			url: "http://www.bandsintown.com/MattAlber",
-			mbid: "a22a3a4a-88ba-43c6-9a9b-a77314e90787"
-		}
-		],
-		venue: {
-		id: 3230474,
-		url: "http://www.bandsintown.com/venue/3230474",
-		name: "The Lake Theater & Cafe",
-		city: "Lake Oswego",
-		region: "OR",
-		country: "United States",
-		latitude: 45.4164344,
-		longitude: -122.6638916
-		},
-		ticket_status: "available",
-		on_sale_datetime: null
-	},
-	];
+	var shows = [];
 
 	var listingHTML = '';
 	var location = '';
 
-	function reInitMap() {
-
-    map = new google.maps.Map(document.getElementById('map'), {
-        center: {lat: shows[0].venue.latitude , lng: shows[0].venue.longitude},
-        zoom: 15,
-        zoomControl: true,
-    	zoomControlOptions: {
-        	position: google.maps.ControlPosition.RIGHT_TOP
-    	},
-    });
-
-	for (i = 0; i < shows.length; i++) {  
-	    marker = new google.maps.Marker({
-	        position: new google.maps.LatLng(shows[i].venue.latitude, shows[i].venue.longitude),
-	        map: map
-	    });
-
-	   	google.maps.event.addListener(marker, 'click', (function(marker, i) {
-	       	return function() {
-        		infowindow.setContent(shows[i].artists[0].name);
-	        	infowindow.open(map, marker);
-	        }
-	    	})(marker, i));
-	    }
-
-	var infowindow = new google.maps.InfoWindow();
-
-	var marker, i;
+	function getLocation(){
+		location += $('#city').val();
+		location += ',';
+		location += $('#state').val();
 	}
 
+	function getShows(item){
+	
+		// the parameters we need to pass in our request to StackOverflow's API
+		var request = { 
+			location: location,
+			app_id: 'supp',
+			api_version: '2.0',
+			limit: 100
+		};
+		
+		$.ajax({
+			url: "http://api.bandsintown.com/events/search",
+			data: request,
+			dataType: "jsonp",
+			type: "GET"
+		})
+		.done(function(result){ //this waits for the ajax to return with a succesful promise object
+			for (var i = 0; i < result.length; i ++) {
+				shows.push(result[i]);
+			}
+			if (shows.length === 0) {
+				alert('There don\'t seem to be any shows in this location today!')
+			} else {
+				console.log(shows);
+				compileListings();
+				showListings();
+				mapShows();
+			}
+		})
+		.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
+			alert('error!');
+		});
+
+		return
+	};
 
 	function compileListings() {
 		for (var i = 0; i < shows.length; i ++){
@@ -161,14 +72,39 @@ $(document).ready(function(){
 		document.getElementById('listings').innerHTML += listingHTML;
 	}
 
+	function mapShows() {
+	    var bounds = new google.maps.LatLngBounds();
+
+		for (i = 0; i < shows.length; i++) {  
+
+			position = new google.maps.LatLng(shows[i].venue.latitude, shows[i].venue.longitude);
+		    marker = new google.maps.Marker({
+		        position: position,
+		        map: map
+		    });
+
+		    bounds.extend(position)
+		   	google.maps.event.addListener(marker, 'click', (function(marker, i) {
+		       	return function() {
+	        		infowindow.setContent(shows[i].artists[0].name);
+		        	infowindow.open(map, marker);
+		        }
+		    	})(marker, i));
+		    }
+		map.fitBounds(bounds);
+
+		var infowindow = new google.maps.InfoWindow();
+
+		var marker, i;
+	}
+
 	$('.location').on('click', '.submit', function(e){
 		e.preventDefault();
+		getLocation();
+		getShows();
 		$('.map').css('height', '65%');
 		$('.landing').hide('fast');
 		$('.show-listings').show('fast');
-		compileListings();
-		showListings();
-		reInitMap();
 	});
 
 	$('.show-listings').on('click', '.listing', function(){
