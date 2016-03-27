@@ -48,7 +48,7 @@ ul {
 }
 
 .header {
-	margin-top: 35%;
+	margin-top: 10em;
 }
 
 .center-text {
@@ -56,21 +56,22 @@ ul {
 }
 
 .headline,
-.tagline {
+.tagline,
+.overlay-header {
 	text-shadow: 1px 1px white,
-				  3px 3px 5px #555;
+				  2px 2px 3px #555;
 }
 
 .headline {
-	width: 33%;
+	width: 60%;
 	margin: 0 auto;
 	font-weight: 900;
-	font-size: 13em;
+	font-size: 5em;
 }
 
 .tagline {
 	font-weight: 500;
-	font-size: 5em;
+	font-size: 2em;
 	margin: 2em 0;
 }
 
@@ -81,7 +82,7 @@ ul {
 .location {
 	margin: .75em auto;
 	display: block;
-	font-size: 2em;
+	font-size: 1.3em;
 }
 
 .text-input {
@@ -180,9 +181,9 @@ ul {
 }
 
 .reload {
-	width: 25em;
-	height: 10em;
-	margin: 0 auto;
+	width: 10em;
+	height: 7em;
+	margin: 20% auto;
 	background: #efefef;
 	border-radius: 5px;
 	border: solid 1px #222;
@@ -214,7 +215,7 @@ ul {
 	background-color: rgb(245, 245, 245);
 	bottom: 0;
 	left: 0;
-	z-index: 500;
+	z-index: 1000;
 	width: 100%;
 	overflow: auto;
 	display: none;
@@ -228,25 +229,79 @@ ul {
 
 .listing {
 	border-bottom: solid 1px #444;
-	padding-bottom: 15px;
-	padding-left: 25px;
+	padding-bottom: 10px;
+	padding-left: 5px;
 }
 
 .listing-title {
-	font-size: 4.8rem;
-	margin: 25px 0;
+	font-size: 1.75em;
+	margin: 10px 0;
 }
 
 .listing-subheading {
-	font-size: 4.1rem;
-	margin: 25px 0;
+	font-size: 1.25em;
+	margin: 10px 0;
 }
 
 .otherInfo {
 	display: none;
-	font-size: 1.5rem;
+	font-size: 1em;
 }
 
+.supp-overlay {
+	
+}
+
+.supp-overlay {
+	display: none;
+	position: fixed;
+	top: 0;
+	left: 45%;
+	width: 15em;
+	margin: 0 auto;
+	padding-top: .5em;
+	z-index: 1000;
+}
+
+.overlay-header {
+	margin-top: 0;
+	font-size: 3em;
+}
+
+/****** MEDIA QUERIES *******/
+
+@media (min-width: 600px) {
+	.headline {
+		font-size: 6.5em;
+	}
+
+	.tagline {
+		font-size: 3em;
+	}
+}
+
+@media (min-width: 719px) {
+	.show-listings {
+		position: relative;
+		width: 30%;
+		height: 100%;
+		float: right;
+		z-index: 1000;
+	}
+
+	#map {
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		width: 100%;
+		float: left;
+	}
+
+	.supp-overlay {
+		left: 35%;
+	}
+}
 
 
 

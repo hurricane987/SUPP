@@ -7,13 +7,14 @@ var map;
          	zoom: 15,
          	zoomControl: true,
     		zoomControlOptions: {
-        		position: google.maps.ControlPosition.RIGHT_TOP
+        		position: google.maps.ControlPosition.LEFT_CENTER
     		},
         });
 	}
 
 $(document).ready(function(){
 
+	var mq = window.matchMedia( "(min-width: 719px)" );
 	var shows = [];
 	var listingHTML = '';
 
@@ -28,6 +29,8 @@ $(document).ready(function(){
 			location: getLocation(),
 			app_id: 'supp',
 			api_version: '2.0',
+			order: 'asc',
+			sort: 'datetime',
 			limit: 75
 		};
 		
@@ -47,9 +50,9 @@ $(document).ready(function(){
 				compileListings();
 				showListings();
 				mapShows();
+				$('.supp-overlay').show('fast');
 				$('.loading-screen').hide('fast');
 				$('.show-listings').show('fast');
-				$('.map').css('height', '65%');
 			}
 		})
 		.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
@@ -94,7 +97,7 @@ $(document).ready(function(){
 		    bounds.extend(position)
 		   	google.maps.event.addListener(marker, 'click', (function(marker, i) {
 		       	return function() {
-	        		infowindow.setContent('<h1>' + shows[i].artists[0].name + '</h1><h2>' + shows[i].venue.name + '</h2><h2>' + moment(shows[i].datetime).format( "MMM DD, YYYY h:mm a" ) + '</h2>');
+	        		infowindow.setContent('<h3>' + shows[i].artists[0].name + '</h3><h4>' + shows[i].venue.name + '</h4><h4>' + moment(shows[i].datetime).format( "MMM DD, YYYY h:mm a" ) + '</h4>');
 		        	infowindow.open(map, marker);
 		        }
 		    	})(marker, i));
@@ -105,6 +108,7 @@ $(document).ready(function(){
 
 		var marker, i;
 	}
+
 
 	$('.location').on('click', '.submit', function(e){
 		e.preventDefault();
@@ -119,7 +123,7 @@ $(document).ready(function(){
 		var thisLat = $(this).data('lat');
 		var thisLng = $(this).data('lng'); 
 		function zoomToShow(){
-			map.setZoom(19);
+			map.setZoom(16);
 			map.panTo(new google.maps.LatLng(thisLat, thisLng));
 		}
 		zoomToShow();
