@@ -13,8 +13,6 @@ var map;
 	}
 
 $(document).ready(function(){
-
-	var mq = window.matchMedia( "(min-width: 719px)" );
 	var shows = [];
 	var listingHTML = '';
 
@@ -75,7 +73,14 @@ $(document).ready(function(){
 
 	function compileListings() {
 		for (var i = 0; i < shows.length; i ++){
-			listingHTML += "<li><div class='listing' data-id='" + shows[i].id + "' data-lat='" + shows[i].venue.latitude + "' data-lng='" + shows[i].venue.longitude + "'><h3 class='listing-title'>" + shows[i].artists[0].name + " @ " + shows[i].venue.name + "</h3><h4 class='listing-subheading'>" + moment(shows[i].datetime).format( 'MMM DD, YYYY h:mm a' ) + "</h4><div class='otherInfo' id='other" + shows[i].id + "'><h4 class='listing-subheading'><a href='" + shows[i].url + "'>Event Page</a></h4><h4 class='listing-subheading'><a href='" + shows[i].ticket_url + "'>Get Tickets</a></h4></div></div></li>";
+			listingHTML += "<li><div class='listing' data-id='" + shows[i].id + "' data-lat='" + shows[i].venue.latitude + "' data-lng='" + shows[i].venue.longitude + "'>";
+			if (shows[i].artists.length) {
+				listingHTML += "<h3 class='listing-title'>" + shows[i].artists[0].name + " @ " + shows[i].venue.name + "</h3>";
+			} else {
+				listingHTML += "<h3 class='listing-title'>" + shows[i].venue.name + "</h3>";
+			}
+			listingHTML += "<h4 class='listing-subheading'>" + moment(shows[i].datetime).format( 'MMM DD, YYYY h:mm a' ) + "</h4>";
+			listingHTML += "<div class='otherInfo' id='other" + shows[i].id + "'><h4 class='listing-subheading'><a href='" + shows[i].url + "'>Event Page</a></h4><h4 class='listing-subheading'><a href='" + shows[i].ticket_url + "'>Get Tickets</a></h4></div></div></li>";
 		}
 	}
 
@@ -122,32 +127,7 @@ $(document).ready(function(){
 		$(this).find('.otherInfo').toggle('fast');
 		var thisLat = $(this).data('lat');
 		var thisLng = $(this).data('lng'); 
-		function zoomToShow(){
-			map.setZoom(16);
-			map.panTo(new google.maps.LatLng(thisLat, thisLng));
-		}
-		zoomToShow();
+		map.setZoom(16);
+		map.panTo(new google.maps.LatLng(thisLat, thisLng));
 	});
 });
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
