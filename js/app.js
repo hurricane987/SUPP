@@ -33,7 +33,7 @@ $(document).ready(function(){
 		};
 		
 		$.ajax({
-			url: "http://api.bandsintown.com/events/search",
+			url: "https://api.bandsintown.com/events/search",
 			data: request,
 			dataType: "jsonp",
 			type: "GET"
