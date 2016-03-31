@@ -13,8 +13,6 @@ var map;
 	}
 
 $(document).ready(function(){
-	var shows = [];
-	var listingHTML = '';
 
 	function getLocation(){
 		return $('#city').val() + ',' + $('#state').val();
@@ -32,31 +30,14 @@ $(document).ready(function(){
 			limit: 75
 		};
 		
-		$.ajax({
+		 return $.ajax({
 			url: "https://api.bandsintown.com/events/search",
 			data: request,
 			dataType: "jsonp",
 			type: "GET"
-		})
-		.done(function(result){ //this waits for the ajax to return with a succesful promise object
-			for (var i = 0; i < result.length; i ++) {
-				shows.push(result[i]);
-			}
-			if (shows.length === 0) {
-				nothingToShow();
-			} else {
-				compileListings();
-				showListings();
-				mapShows();
-				$('.supp-overlay').show('fast');
-				$('.loading-screen').hide('fast');
-				$('.show-listings').show('fast');
-			}
-		})
-		.fail(function(jqXHR, error){ //this waits for the ajax to return with an error promise object
+		}).fail(function(jqXHR, error){ debugger; //this waits for the ajax to return with an error promise object
 			nothingToShow();
 		});
-		return
 	};
 
 	function nothingToShow(){
@@ -71,7 +52,10 @@ $(document).ready(function(){
 		});
 	}
 
-	function compileListings() {
+	function compileListings(shows) {
+
+		var listingHTML = '';
+
 		for (var i = 0; i < shows.length; i ++){
 			listingHTML += "<li><div class='listing' data-id='" + shows[i].id + "' data-lat='" + shows[i].venue.latitude + "' data-lng='" + shows[i].venue.longitude + "'>";
 			if (shows[i].artists.length) {
@@ -82,13 +66,11 @@ $(document).ready(function(){
 			listingHTML += "<h4 class='listing-subheading'>" + moment(shows[i].datetime).format( 'MMM DD, YYYY h:mm a' ) + "</h4>";
 			listingHTML += "<div class='otherInfo' id='other" + shows[i].id + "'><h4 class='listing-subheading'><a href='" + shows[i].url + "'>Event Page</a></h4><h4 class='listing-subheading'><a href='" + shows[i].ticket_url + "'>Get Tickets</a></h4></div></div></li>";
 		}
-	}
 
-	function showListings() {
 		document.getElementById('listings').innerHTML += listingHTML;
 	}
 
-	function mapShows() {
+	function mapShows(shows) {
 	    var bounds = new google.maps.LatLngBounds();
 
 		for (i = 0; i < shows.length; i++) {  
@@ -114,13 +96,21 @@ $(document).ready(function(){
 		var marker, i;
 	}
 
-
 	$('.location').on('click', '.submit', function(e){
 		e.preventDefault();
 		$('.landing').hide('fast');
 		$('.loading-screen').show('fast');
-		getLocation();
-		getShows();
+		getShows().done(function(results){ //this waits for the ajax to return with a succesful promise object
+		 	if (results.errors) {
+				nothingToShow(); 
+			} else {
+				compileListings(results);
+				mapShows(results);
+				$('.supp-overlay').show('fast');
+				$('.loading-screen').hide('fast');
+				$('.show-listings').show('fast');
+			}
+		})
 	});
 
 	$('.show-listings').on('click', '.listing', function(){
